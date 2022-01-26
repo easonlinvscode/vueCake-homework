@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <style>
+        body {
+            background-color: #5286F3;
+            font-size: 14px;
+            color: #fff;
+            
+        }
+
+        .login-container {
+            /* border: red solid; */
+            width: 300px;
+            max-width: 100%;
+            /* margin: 50px auto; */
+            margin:10% auto;
+            height: 420px;
+            padding: 20px;
+            background-color: rgba(233, 231, 231, 0.3);
+           
+        }
+
+        .login-container h2 {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .login-container .btn-login {
+            background-color: #FF5964;
+            color: #fff;
+        }
+
+        a {
+            color: #fff;
+        }
+        .copyright{
+            width: 130px;
+            margin: auto;
+            margin-top: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="login-container">
+            <h2 class="h3 mb-5 font-weight-normal">
+                請先登入
+            </h2>
+            <div class="container">
+                <div class="row">
+                    <form class="form-signin" @submit.prevent="login">
+                        <div class="row">
+                            <div class="col-md-12 form-group mb-3">
+                                <input type="email" class="form-control" v-model="user.username" id="floatingInput"
+                                placeholder="name@example.com" required autofocus>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group mb-3">
+                                <input type="password" class="form-control" v-model="user.password" id="floatingPassword"
+                                placeholder="Password" required>
+                            </div>
+                        </div>
+                        <span v-if="hintMessage == '1'" class="alert-danger">帳號或密碼輸入錯誤</span>
+                        <span v-else-if="hintMessage == '0'" class="alert-success">登入成功</span>
+                        <button class="btn btn-lg btn-warning w-100 mt-3" type="submit">
+                            登入
+                        </button>
+                       
+                    </form>
+                </div>
+                <p class="copyright text-muted">
+                    &copy; 2022~∞ - Eason
+                </p>
+            </div>
+        </div>
+    </div>
+
+   
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js'
+        integrity='sha512-Xk3wWei2TGrsh9kDSBKUMIjw/86sLUvhtnv9f7fOuIwhhiUTKz8szkWkzHthrM5Bb3Bu9idSzkxOrkzhcneuiw=='
+        crossorigin='anonymous'></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+        integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous">
+    </script>
+    <!-- Bootstrap JavaScript-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script>
+    <script type="module">
+        import {
+            createApp
+        } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
+
+        const url = 'https://vue3-course-api.hexschool.io/v2'; // 請加入站點
+        const path = 'vue-cake'; // 請加入個人 API Path
+
+        createApp({
+            data() {
+                return {
+                    user: {
+                        username: '',
+                        password: '',
+                    },
+                    hintMessage:'',
+                }
+            },
+            methods: {
+                login() {
+                    const api = `${url}/admin/signin`;
+                    axios.post(api, this.user).then((response) => {
+                        console.log(response.data);
+                        // 寫入 cookie token
+                        // expires 設置有效時間
+                        if(response.data.success){
+                        this.hintAlert = '0';
+                        const {token, expired} = response.data;
+                        document.cookie = `cakeToken=${token}; expires=${new Date(expired)};`;
+                        parent.window.location.replace('./products.html');
+                    }
+                    }).catch((error) => {
+                        // alert(error.data.message);
+                        this.hintMessage = '1';
+                    });
+                },
+            },
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
