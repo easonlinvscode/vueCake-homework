@@ -26,7 +26,7 @@ const app = createApp({
                 this.hintAlert = '0';
                 const {token, expired} = response.data;
                 document.cookie = `cakeToken=${token}; expires=${new Date(expired)};`;
-                parent.window.location.replace('./products.html');
+                parent.window.location.replace('./products-pagination.html');
             }
             }).catch((error) => {
                 // alert(error.data.message);
