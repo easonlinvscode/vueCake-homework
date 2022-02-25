@@ -144,6 +144,12 @@ const app = createApp({
              this.tempProduct.imagesUrl = [];
              this.tempProduct.imagesUrl.push('');
          },
+
+         // 前往購物車列表
+         gotoCart(){
+            parent.window.location.replace('./products-cart-list.html');
+            
+         },
          
 
 
